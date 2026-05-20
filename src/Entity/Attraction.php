@@ -3,8 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\AttractionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Table(name: 'attraction')]
 #[ORM\Entity(repositoryClass: AttractionRepository::class)]
 class Attraction
 {
@@ -18,6 +21,17 @@ class Attraction
 
     #[ORM\Column(nullable: true)]
     private ?int $nbGens = null;
+
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'attraction')]
+    private Collection $users;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -44,6 +58,36 @@ class Attraction
     public function setNbGens(?int $nbGens): static
     {
         $this->nbGens = $nbGens;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->setAttraction($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getAttraction() === $this) {
+                $user->setAttraction(null);
+            }
+        }
 
         return $this;
     }

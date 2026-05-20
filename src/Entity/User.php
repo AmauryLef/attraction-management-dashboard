@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: 'user')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_UUID', fields: ['uuid'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -31,17 +32,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $Prenom = null;
-
-    #[ORM\Column(length: 50)]
-    private ?string $Nom = null;
 
     #[ORM\Column(length: 50)]
     private ?string $email = null;
 
     #[ORM\Column]
     private ?\DateTime $last_connexion = null;
+
+    #[ORM\Column(length: 20)]
+    private ?string $prenom = null;
+
+    #[ORM\Column(length: 30)]
+    private ?string $nom = null;
+
+    #[ORM\Column]
+    private ?int $age = null;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?Attraction $attraction = null;
 
     public function getId(): ?int
     {
@@ -162,6 +170,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastConnexion(\DateTime $last_connexion): static
     {
         $this->last_connexion = $last_connexion;
+
+        return $this;
+    }
+
+    public function getAge(): ?int
+    {
+        return $this->age;
+    }
+
+    public function setAge(int $age): static
+    {
+        $this->age = $age;
+
+        return $this;
+    }
+
+    public function getAttraction(): ?Attraction
+    {
+        return $this->attraction;
+    }
+
+    public function setAttraction(?Attraction $attraction): static
+    {
+        $this->attraction = $attraction;
 
         return $this;
     }
