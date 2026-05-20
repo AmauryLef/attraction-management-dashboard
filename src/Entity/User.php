@@ -31,6 +31,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $Prenom = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $Nom = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $email = null;
+
+    #[ORM\Column]
+    private ?\DateTime $last_connexion = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,5 +116,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
 
         return $data;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->Prenom;
+    }
+
+    public function setPrenom(string $Prenom): static
+    {
+        $this->Prenom = $Prenom;
+
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->Nom;
+    }
+
+    public function setNom(string $Nom): static
+    {
+        $this->Nom = $Nom;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getLastConnexion(): ?\DateTime
+    {
+        return $this->last_connexion;
+    }
+
+    public function setLastConnexion(\DateTime $last_connexion): static
+    {
+        $this->last_connexion = $last_connexion;
+
+        return $this;
     }
 }
